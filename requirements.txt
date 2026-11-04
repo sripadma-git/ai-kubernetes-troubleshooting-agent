@@ -1,0 +1,7 @@
+﻿fastapi
+uvicorn[standard]
+kubernetes
+requests
+python-dotenv
+pytest
+httpx
