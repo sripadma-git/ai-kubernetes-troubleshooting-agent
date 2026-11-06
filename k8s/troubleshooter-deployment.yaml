@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-k8s-troubleshooter
+  namespace: ai-troubleshooter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-k8s-troubleshooter
+  template:
+    metadata:
+      labels:
+        app: ai-k8s-troubleshooter
+    spec:
+      serviceAccountName: ai-troubleshooter
+      containers:
+        - name: agent
+          image: ai-k8s-troubleshooter:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: PROMETHEUS_URL
+              value: "http://monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

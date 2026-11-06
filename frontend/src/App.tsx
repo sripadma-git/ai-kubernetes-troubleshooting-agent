@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import "./App.css";
 
-const API_BASE_URL = "http://127.0.0.1:8000";
+const API_BASE_URL = "http://127.0.0.1:8001";
 const ANALYZE_ENDPOINT = `${API_BASE_URL}/api/v1/cluster/analyze`;
 
 type Severity = "critical" | "warning" | "info" | string;
@@ -98,9 +98,11 @@ function App() {
     setError("");
 
     try {
-      const params = new URLSearchParams({
-        namespace,
-      });
+      const params = new URLSearchParams();
+
+      if (namespace !== "all") {
+        params.set("namespace", namespace);
+      }
 
       const response = await fetch(`${ANALYZE_ENDPOINT}?${params.toString()}`);
 
@@ -731,3 +733,4 @@ function FindingDetails({ finding }: { finding: Finding }) {
 }
 
 export default App;
+
