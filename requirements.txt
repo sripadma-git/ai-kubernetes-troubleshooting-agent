@@ -1,7 +1,8 @@
-﻿fastapi
+fastapi
 uvicorn[standard]
 kubernetes
 requests
 python-dotenv
 pytest
 httpx
+google-genai

@@ -1,4 +1,4 @@
-﻿
+﻿from app.ai_explainer import explain_finding
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Query
@@ -115,6 +115,21 @@ def analyze(payload: dict[str, Any]) -> dict[str, Any]:
             detail=f"Analysis failed: {str(exc)}",
         ) from exc
 
+
+@app.post("/api/v1/ai/explain")
+def explain_diagnostic_finding(finding: dict[str, Any]) -> dict[str, Any]:
+    """
+    Generate an AI-powered explanation for a diagnostic finding.
+    """
+    try:
+        result = explain_finding(finding)
+        return result
+
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail=f"AI explanation failed: {str(exc)}",
+        ) from exc
 
 @app.get("/api/v1/cluster/analyze")
 def analyze_live_cluster(
